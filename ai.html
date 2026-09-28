@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI • BrainWorks</title><link id="siteFavicon" rel="icon" href="assets/brainworks-logo.png"><link rel="stylesheet" href="style.css"></head>
+<body><div class="bg-glow glow-a"></div><div class="bg-glow glow-b"></div>
+<header class="header"><a class="brand-mini" href="index.html"><span class="brand-dot"></span>BrainWorks</a><nav class="header-right"><a href="games.html">Games</a><a href="settings.html">Settings</a><a href="ai.html" class="ai-link active-link">AI</a></nav></header>
+<main class="ai-main"><section class="ai-card"><div class="eyebrow">BRAINWORKS AI</div><h1>Ask BrainWorks</h1><p class="settings-note">Use the offline assistant instantly, or add your own Pollinations API key in Settings for open-ended online answers.</p>
+<div id="lockedState" class="ai-locked"><div class="ad-box"><span>ADVERTISEMENT</span><strong>Free AI access</strong><small>Your demo ad will finish automatically after a few seconds.</small></div><button class="primary" id="watchAd">Watch ad</button></div>
+<div id="chatState" hidden><div id="chatLog" class="chat-log"></div><form id="chatForm" class="chat-form"><input id="chatInput" placeholder="Ask anything..." autocomplete="off"><button class="primary">Send</button></form><div class="ai-status" id="aiStatus"></div></div>
+</section></main>
+<div id="adModal" class="modal" hidden><div class="ad-modal"><div class="ad-top"><span>ADVERTISEMENT</span><span id="adTimer">3</span></div><div class="fake-ad"><div class="ad-orb"></div><h2>BrainWorks Sponsor Preview</h2><p>Placeholder ad. You can replace this slot with a real ad network later.</p></div><button id="skipAd" class="primary" disabled>Continue in 3</button></div></div>
+<script src="site.js"></script><script src="ai.js"></script></body></html>
