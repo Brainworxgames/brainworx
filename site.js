@@ -36,8 +36,61 @@ function gameUrl(file){return 'play/'+file.replace(/\.html?$/,'')+'.html'}
 function renderGames(list,target){if(!target)return;target.innerHTML=list.map((g,i)=>{const initials=g.name.split(/\s+/).map(x=>x[0]).join('').slice(0,3).toUpperCase();return `<article class="game-card" style="animation-delay:${i*35}ms"><a href="${gameUrl(g.file)}" class="game-thumb-link" aria-label="Play ${esc(g.name)}"><div class="game-thumb" ${g.img?`style="background-image:url('${g.img}')"`:''}>${g.img?'':`<div class="thumb-initials">${esc(initials)}</div>`}</div></a><div class="game-body"><div class="game-name">${esc(g.name)}</div><a class="play-btn" href="${gameUrl(g.file)}">Play</a></div></article>`}).join('')}
 function setupGames(){const grid=document.getElementById('gameGrid'),empty=document.getElementById('emptyState'),input=document.getElementById('searchInput');if(!grid)return;renderGames(games,grid);if(input)input.addEventListener('input',()=>{const q=input.value.trim().toLowerCase();const filtered=games.filter(g=>g.name.toLowerCase().includes(q));renderGames(filtered,grid);if(empty)empty.hidden=filtered.length>0})}
 function setupHome(){const form=document.getElementById('homeSearch'),input=document.getElementById('homeInput'),results=document.getElementById('searchResults');const tag=document.getElementById('homeTagline');if(tag){const msgs=['hi teach','hey its me','working your brain'];tag.textContent=msgs[Math.floor(Math.random()*msgs.length)]}if(!form||!input)return;const update=()=>{const q=input.value.trim().toLowerCase();if(!q){results.hidden=true;results.innerHTML='';return}const m=games.filter(g=>g.name.toLowerCase().includes(q)).slice(0,7);results.innerHTML=m.length?m.map(g=>`<a class="quick-result" href="${gameUrl(g.file)}"><span>${esc(g.name)}</span><small>PLAY →</small></a>`).join(''):`<div class="quick-result"><span>No games found</span><small>Try another search</small></div>`;results.hidden=false};input.addEventListener('input',update);form.addEventListener('submit',e=>{e.preventDefault();const q=input.value.trim().toLowerCase();const m=games.find(g=>g.name.toLowerCase().includes(q));if(m)location.href=gameUrl(m.file)})}
-function applySettings(){const title=localStorage.getItem('bw_title');const icon=localStorage.getItem('bw_icon');if(title)document.title=title;if(icon){let link=document.getElementById('siteFavicon');if(!link){link=document.createElement('link');link.id='siteFavicon';link.rel='icon';document.head.appendChild(link)}link.href=icon}}
-function setupSettings(){const title=document.getElementById('tabTitle'),icon=document.getElementById('tabIcon'),save=document.getElementById('saveSettings'),reset=document.getElementById('resetSettings'),status=document.getElementById('settingsStatus');if(!save)return;title.value=localStorage.getItem('bw_title')||document.title.replace(/\s*[•|].*$/,'').trim()||'BrainWorks';save.addEventListener('click',()=>{localStorage.setItem('bw_title',title.value.trim()||'BrainWorks');const file=icon.files&&icon.files[0];if(file){const r=new FileReader();r.onload=()=>{localStorage.setItem('bw_icon',r.result);applySettings();status.textContent='Saved.'};r.readAsDataURL(file)}else{applySettings();status.textContent='Saved.'}});document.querySelectorAll('[data-tab-icon]').forEach(btn=>btn.addEventListener('click',()=>{localStorage.setItem('bw_icon',btn.dataset.tabIcon);applySettings();status.textContent=`${btn.dataset.tabName} icon selected.`}));reset.addEventListener('click',()=>{localStorage.removeItem('bw_title');localStorage.removeItem('bw_icon');title.value='BrainWorks';icon.value='';const link=document.getElementById('siteFavicon');if(link)link.href='assets/brainworks-logo.png';document.title='BrainWorks';status.textContent='Reset.'})}
+function ensureFaviconLink(){
+  let link=document.getElementById('siteFavicon');
+  if(!link){
+    link=document.querySelector('link[rel~="icon"]');
+    if(link) link.id='siteFavicon';
+  }
+  if(!link){
+    link=document.createElement('link');
+    link.id='siteFavicon';
+    link.rel='icon';
+    document.head.appendChild(link);
+  }
+  return link;
+}
+function applySettings(){
+  const title=localStorage.getItem('bw_title');
+  const icon=localStorage.getItem('bw_icon');
+  if(title) document.title=title;
+  const link=ensureFaviconLink();
+  link.href=icon||((location.pathname.includes('/play/'))?'../assets/brainworks-logo.png':'assets/brainworks-logo.png');
+  link.type='image/png';
+}
+function selectPreset(url,name,status){
+  localStorage.setItem('bw_icon',url);
+  applySettings();
+  document.querySelectorAll('[data-tab-icon]').forEach(btn=>btn.classList.toggle('selected',btn.dataset.tabIcon===url));
+  if(status) status.textContent=`${name} icon selected.`;
+}
+function setupSettings(){
+  const title=document.getElementById('tabTitle'),icon=document.getElementById('tabIcon'),save=document.getElementById('saveSettings'),reset=document.getElementById('resetSettings'),status=document.getElementById('settingsStatus');
+  if(!save) return;
+  title.value=localStorage.getItem('bw_title')||'BrainWorks';
+  document.querySelectorAll('[data-tab-icon]').forEach(btn=>{
+    btn.classList.toggle('selected',btn.dataset.tabIcon===localStorage.getItem('bw_icon'));
+    btn.addEventListener('click',()=>selectPreset(btn.dataset.tabIcon,btn.dataset.tabName,status));
+  });
+  save.addEventListener('click',()=>{
+    localStorage.setItem('bw_title',title.value.trim()||'BrainWorks');
+    const file=icon&&icon.files&&icon.files[0];
+    if(file){
+      const r=new FileReader();
+      r.onload=()=>{localStorage.setItem('bw_icon',r.result);applySettings();status.textContent='Saved.'};
+      r.readAsDataURL(file);
+    } else { applySettings(); status.textContent='Saved.'; }
+  });
+  if(reset) reset.addEventListener('click',()=>{
+    localStorage.removeItem('bw_title');
+    localStorage.removeItem('bw_icon');
+    title.value='BrainWorks';
+    if(icon) icon.value='';
+    applySettings();
+    document.querySelectorAll('[data-tab-icon]').forEach(btn=>btn.classList.remove('selected'));
+    status.textContent='Reset.';
+  });
+}
 function cursor(){if(matchMedia('(pointer:fine)').matches){document.body.classList.add('no-cursor');const dot=document.createElement('div'),ring=document.createElement('div');dot.className='cursor-dot';ring.className='cursor-ring';document.body.append(dot,ring);let x=-100,y=-100,rx=-100,ry=-100;addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;dot.style.left=x+'px';dot.style.top=y+'px'});function loop(){rx+=(x-rx)*.18;ry+=(y-ry)*.18;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)}loop();addEventListener('mousedown',()=>{ring.classList.remove('click');void ring.offsetWidth;ring.classList.add('click')})}}
 applySettings();setupGames();setupHome();setupSettings();cursor();
 })();
