@@ -8,7 +8,17 @@
 <link id="siteFavicon" rel="icon" href="assets/brainworks-logo.png">
 <link rel="stylesheet" href="style.css">
 </head>
-<body><div class="bg-glow glow-a"></div><div class="bg-glow glow-b"></div>
+<body><div class="browser-nav-wrap" data-static-nav="1">
+  <div class="browser-nav" role="navigation" aria-label="BrainWorks navigation">
+    <div class="browser-window-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <nav class="browser-tabs">
+      <a class="browser-tab" data-nav-tab="home" href="index.html"><span class="tab-favicon"><img src="assets/brainworks-logo.png" alt=""></span><span>BrainWorks</span></a>
+      <a class="browser-tab" data-nav-tab="games" href="classes.html"><span class="tab-favicon"><span class="mini-play">▶</span></span><span>g@m3s</span></a>
+      <a class="browser-tab active" data-nav-tab="settings" href="settings.html"><span class="tab-favicon">⚙</span><span>Settings</span></a>
+    </nav>
+    <div class="browser-address"><span class="address-lock">⌁</span><span class="address-text">brainworks</span><span class="address-dot">•</span></div>
+  </div>
+</div><div class="bg-glow glow-a"></div><div class="bg-glow glow-b"></div>
 <main class="settings-main"><section class="settings-card"><div class="eyebrow">CUSTOMIZATION</div><h1>Settings</h1><p class="settings-note">Customize the browser tab title, icon, and site colour theme.</p>
 <label>Tab title<input id="tabTitle" type="text" maxlength="80" placeholder="BrainWorks"></label>
 <label>Colour theme</label>

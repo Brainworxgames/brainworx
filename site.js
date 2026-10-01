@@ -78,7 +78,7 @@ function renderGames(list,target){
   target.innerHTML=shown.map((g,i)=>{
     const initials=g.name.split(/\s+/).map(x=>x[0]).join('').slice(0,3).toUpperCase();
     const href=g.random?'#random':gameUrl(g.file);
-    return `<article class="game-card ${g.random?'random-card':''}" style="animation-delay:${i*35}ms" data-random="${g.random?'1':'0'}"><a href="${href}" class="game-thumb-link" aria-label="${g.random?'Choose a random game':'Play '+esc(g.name)}"><div class="game-thumb">${g.img?`<img class="game-thumb-img" src="${esc(g.img)}" alt="" loading="lazy">`:`<div class="thumb-initials">${esc(initials)}</div>`}<div class="thumb-shine"></div></div></a><div class="game-body"><div class="game-name">${esc(g.name)}</div><a class="play-btn" href="${href}">${g.random?'Random':'Play'}</a></div></article>`;
+    return `<article class="game-card ${g.random?'random-card':''}" style="animation-delay:${i*35}ms" data-random="${g.random?'1':'0'}"><a href="${href}" class="game-thumb-link" aria-label="${g.random?'Choose a random game':'Play '+esc(g.name)}"><div class="game-thumb">${g.img?`<img class="game-thumb-img" src="${esc(g.img)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="thumb-fallback">${esc(initials)}</div>`:`<div class="thumb-initials">${esc(initials)}</div>`}<div class="thumb-shine"></div></div></a><div class="game-body"><div class="game-name">${esc(g.name)}</div><a class="play-btn" href="${href}">${g.random?'Random':'Play'}</a></div></article>`;
   }).join('');
   bindCardEffects(target);
 }
@@ -102,16 +102,15 @@ function bindCardEffects(target){
       });
       thumb.addEventListener('pointerleave',reset);
     }
-    card.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{
-      if(card.dataset.random==='1'){e.preventDefault();const g=randomGame();navigateGame(g.file);}
-    }));
   });
 }
 function setupGames(){
   const grid=document.getElementById('gameGrid'),empty=document.getElementById('emptyState'),input=document.getElementById('searchInput');
   if(!grid)return;
-  renderGames(games,grid);
-  if(input)input.addEventListener('input',()=>{const q=input.value.trim().toLowerCase();const filtered=games.filter(g=>g.name.toLowerCase().includes(q));renderGames(filtered,grid);if(empty)empty.hidden=filtered.length>0});
+  bindCardEffects(grid);
+  const bindRandom=()=>grid.querySelectorAll('.random-card a').forEach(a=>{if(a.dataset.randomBound==='1')return;a.dataset.randomBound='1';a.addEventListener('click',e=>{e.preventDefault();const g=randomGame();navigateGame(g.file);});});
+  bindRandom();
+  if(input)input.addEventListener('input',()=>{const q=input.value.trim().toLowerCase();const filtered=games.filter(g=>g.name.toLowerCase().includes(q));if(!q){location.reload();return;}renderGames(filtered,grid);bindRandom();if(empty)empty.hidden=filtered.length>0});
 }
 function setupHome(){
   const form=document.getElementById('homeSearch'),input=document.getElementById('homeInput'),results=document.getElementById('searchResults');
@@ -145,20 +144,28 @@ function setupSettings(){
   if(reset)reset.addEventListener('click',()=>{localStorage.removeItem('bw_title');localStorage.removeItem('bw_icon');title.value='BrainWorks';if(icon)icon.value='';applySettings();document.querySelectorAll('[data-tab-icon]').forEach(btn=>btn.classList.remove('selected'));status.textContent='Reset.';});
 }
 function setupBrowserNav(){
-  if(document.querySelector('.browser-nav'))return;
+  let nav=document.querySelector('.browser-nav-wrap');
   const isPlay=location.pathname.includes('/play/');
   const prefix=isPlay?'../':'';
-  const current=location.pathname.endsWith('/settings.html')?'settings':location.pathname.endsWith('/classes.html')?'games':'home';
-  const nav=document.createElement('div'); nav.className='browser-nav-wrap';
-  nav.innerHTML=`<div class="browser-nav"><div class="browser-window-dots" aria-hidden="true"><i></i><i></i><i></i></div><nav class="browser-tabs" aria-label="Site tabs"><a class="browser-tab ${current==='home'?'active':''}" data-nav-tab="home" href="${prefix}index.html"><span class="tab-favicon"><img src="${prefix}assets/brainworks-logo.png" alt=""></span><span>BrainWorks</span></a><a class="browser-tab ${current==='games'?'active':''}" data-nav-tab="games" href="${prefix}classes.html"><span class="tab-favicon"><span class="mini-play">▶</span></span><span>g@m3s</span></a><a class="browser-tab ${current==='settings'?'active':''}" data-nav-tab="settings" href="${prefix}settings.html"><span class="tab-favicon">⚙</span><span>Settings</span></a></nav><div class="browser-pill" aria-hidden="true"></div></div>`;
-  document.body.prepend(nav);
-  const transition=document.createElement('div'); transition.className='tab-transition'; transition.innerHTML=`<div class="transition-orb"></div><img src="${prefix}assets/brainworks-logo.png" alt="BrainWorks"><div class="transition-name">BrainWorks</div>`; document.body.appendChild(transition);
-  nav.querySelectorAll('.browser-tab').forEach(tab=>tab.addEventListener('click',e=>{
-    if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
-    const target=new URL(tab.href,location.href); if(target.href===location.href)return;
-    e.preventDefault(); transition.classList.add('show'); setTimeout(()=>location.href=target.href,420);
-  }));
+  if(!nav){
+    const current=location.pathname.endsWith('/settings.html')?'settings':location.pathname.endsWith('/classes.html')?'games':'home';
+    nav=document.createElement('div'); nav.className='browser-nav-wrap'; nav.innerHTML=`<div class="browser-nav"><div class="browser-window-dots" aria-hidden="true"><i></i><i></i><i></i></div><nav class="browser-tabs" aria-label="Site tabs"><a class="browser-tab ${current==='home'?'active':''}" data-nav-tab="home" href="${prefix}index.html"><span class="tab-favicon"><img src="${prefix}assets/brainworks-logo.png" alt=""></span><span>BrainWorks</span></a><a class="browser-tab ${current==='games'?'active':''}" data-nav-tab="games" href="${prefix}classes.html"><span class="tab-favicon"><span class="mini-play">▶</span></span><span>g@m3s</span></a><a class="browser-tab ${current==='settings'?'active':''}" data-nav-tab="settings" href="${prefix}settings.html"><span class="tab-favicon">⚙</span><span>Settings</span></a></nav><div class="browser-address"><span class="address-lock">⌁</span><span class="address-text">brainworks</span><span class="address-dot">•</span></div></div>`;
+    document.body.prepend(nav);
+  }
+  let transition=document.querySelector('.tab-transition');
+  if(!transition){
+    transition=document.createElement('div'); transition.className='tab-transition'; transition.innerHTML=`<div class="transition-orb"></div><img src="${prefix}assets/brainworks-logo.png" alt="BrainWorks"><div class="transition-name">BrainWorks</div>`; document.body.appendChild(transition);
+  }
+  nav.querySelectorAll('.browser-tab').forEach(tab=>{
+    if(tab.dataset.bound==='1')return; tab.dataset.bound='1';
+    tab.addEventListener('click',e=>{
+      if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+      const target=new URL(tab.href,location.href); if(target.href===location.href)return;
+      e.preventDefault(); transition.classList.add('show'); setTimeout(()=>location.href=target.href,430);
+    });
+  });
 }
+
 function cursor(){if(matchMedia('(pointer:fine)').matches){document.body.classList.add('no-cursor');const dot=document.createElement('div'),ring=document.createElement('div');dot.className='cursor-dot';ring.className='cursor-ring';document.body.append(dot,ring);let x=-100,y=-100,rx=-100,ry=-100;addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;dot.style.left=x+'px';dot.style.top=y+'px'});function loop(){rx+=(x-rx)*.18;ry+=(y-ry)*.18;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)}loop();addEventListener('mousedown',()=>{ring.classList.remove('click');void ring.offsetWidth;ring.classList.add('click')});}}
 applyTheme(localStorage.getItem('bw_theme')||'pink');applySettings();fallingBalls();setupThemes();setupBrowserNav();setupGames();setupHome();setupSettings();cursor();
 })();
