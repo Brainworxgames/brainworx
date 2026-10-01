@@ -102,3 +102,54 @@ body{transition:background-color .35s ease,color .35s ease}
 .header,.home-main,.page-main,.settings-main,.game-shell{position:relative;z-index:1}
 @keyframes ballFall{0%{transform:translate3d(0,-70px,0) rotate(0deg)}22%{transform:translate3d(var(--drift-a),24vh,0) rotate(80deg)}52%{transform:translate3d(var(--drift-b),58vh,0) rotate(190deg)}78%{transform:translate3d(var(--drift-c),88vh,0) rotate(275deg)}100%{transform:translate3d(var(--drift-d),116vh,0) rotate(360deg)}}
 @media (max-width:760px){.theme-presets{grid-template-columns:repeat(2,minmax(0,1fr))}.falling-ball:nth-child(n+18){display:none}}
+
+
+/* Glossy browser-style site tabs */
+.browser-nav-wrap{position:sticky;top:12px;z-index:80;display:flex;justify-content:center;padding:0 18px;margin:0 auto 6px;pointer-events:none}
+.browser-nav{pointer-events:auto;width:min(880px,calc(100vw - 36px));height:68px;padding:9px 10px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.18);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.055)),linear-gradient(135deg,rgba(25,20,31,.92),rgba(10,9,13,.90));box-shadow:0 18px 55px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.5);backdrop-filter:blur(22px) saturate(140%);position:relative;overflow:hidden}
+.browser-nav::before{content:"";position:absolute;inset:-60% -20% auto;height:95px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);transform:rotate(-6deg);animation:navSheen 7s ease-in-out infinite;pointer-events:none}
+.browser-window-dots{display:flex;gap:6px;padding:0 6px;z-index:1}.browser-window-dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.22);box-shadow:inset 0 1px 1px rgba(255,255,255,.35)}
+.browser-window-dots i:nth-child(1){background:#ff6b9d}.browser-window-dots i:nth-child(2){background:#ffcd6b}.browser-window-dots i:nth-child(3){background:#69e69e}
+.browser-tabs{display:flex;align-items:end;gap:5px;min-width:0;flex:1;height:100%;z-index:1}
+.browser-tab{position:relative;display:flex;align-items:center;gap:9px;min-width:0;height:45px;padding:0 17px;border:1px solid transparent;border-radius:15px 15px 12px 12px;color:var(--theme-muted);font-size:13px;font-weight:850;letter-spacing:-.01em;white-space:nowrap;transition:transform .22s ease,color .22s ease,background .22s ease,border-color .22s ease,box-shadow .22s ease}
+.browser-tab::after{content:"";position:absolute;left:16px;right:16px;bottom:3px;height:2px;border-radius:2px;background:var(--theme-accent);transform:scaleX(0);transition:transform .25s ease;opacity:.85}
+.browser-tab:hover{transform:translateY(-2px);color:var(--theme-text);background:rgba(255,255,255,.06)}
+.browser-tab.active{color:var(--theme-text);background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.055));border-color:rgba(255,255,255,.11);box-shadow:0 7px 20px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.11)}
+.browser-tab.active::after{transform:scaleX(1)}
+.tab-favicon{width:24px;height:24px;display:grid;place-items:center;border-radius:7px;background:rgba(255,255,255,.06);font-size:13px;overflow:hidden;flex:none}.tab-favicon img{width:100%;height:100%;object-fit:contain}.mini-play{color:#fff;filter:drop-shadow(0 1px 6px color-mix(in srgb,var(--theme-accent) 45%,transparent))}
+.browser-pill{margin-left:auto;width:90px;height:34px;border-radius:12px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06);box-shadow:inset 0 1px 2px rgba(255,255,255,.05);z-index:1}
+@keyframes navSheen{0%,55%{transform:translateX(-70%) rotate(-6deg);opacity:0}65%{opacity:1}90%,100%{transform:translateX(135%) rotate(-6deg);opacity:0}}
+
+/* Center-logo transition between site tabs */
+.tab-transition{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:rgba(5,4,7,.0);backdrop-filter:blur(0);pointer-events:none;opacity:0;transition:opacity .18s ease,background .3s ease,backdrop-filter .3s ease}
+.tab-transition.show{opacity:1;background:rgba(5,4,7,.88);backdrop-filter:blur(15px);pointer-events:auto}
+.tab-transition img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 16px 35px color-mix(in srgb,var(--theme-accent) 35%,transparent));transform:scale(.65) rotate(-8deg);opacity:0;transition:transform .5s cubic-bezier(.2,.85,.2,1),opacity .25s ease}
+.tab-transition.show img{transform:scale(1) rotate(0deg);opacity:1}
+.transition-orb{position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--theme-accent) 38%,transparent),transparent 68%);filter:blur(4px);opacity:0;transform:scale(.6);transition:transform .55s ease,opacity .3s ease}.tab-transition.show .transition-orb{opacity:1;transform:scale(1.15)}
+.transition-name{position:absolute;transform:translateY(92px);font-weight:900;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#fff;opacity:0;transition:opacity .35s ease .12s}.tab-transition.show .transition-name{opacity:.78}
+
+/* Animated game cards / mouse-following icon tilt */
+.game-card{--card-rx:0deg;--card-ry:0deg;transform:perspective(1000px) rotateY(var(--card-rx)) rotateX(var(--card-ry));transform-style:preserve-3d;will-change:transform;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.game-card:hover{transform:perspective(1000px) translateY(-7px) rotateY(var(--card-rx)) rotateX(var(--card-ry));}
+.game-card::before{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--theme-accent) 25%,transparent),transparent 34%);opacity:0;transition:opacity .2s ease;z-index:3}
+.game-card:hover::before{opacity:1}
+.game-thumb{perspective:900px;--mx:50%;--my:50%}
+.game-thumb-img{display:block;width:100%;height:100%;object-fit:cover;transform:perspective(800px) rotateY(var(--tilt-x,0deg)) rotateX(var(--tilt-y,0deg)) scale(1);transition:transform .12s ease-out,filter .25s ease;will-change:transform;filter:saturate(1.04)}
+.game-card:hover .game-thumb-img{filter:saturate(1.12) brightness(1.06)}
+.thumb-shine{position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.22),transparent 26%);mix-blend-mode:screen;opacity:0;transition:opacity .16s ease;pointer-events:none;z-index:2}
+.game-card:hover .thumb-shine{opacity:1}
+.play-btn{position:relative;overflow:hidden;box-shadow:0 7px 18px color-mix(in srgb,var(--theme-accent) 22%,transparent)}
+.play-btn::before,.primary::before,.secondary::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.24) 50%,transparent 80%);transform:translateX(-130%);transition:transform .5s ease;pointer-events:none}
+.play-btn:hover::before,.primary:hover::before,.secondary:hover::before{transform:translateX(130%)}
+.play-btn,.primary,.secondary{position:relative;overflow:hidden}
+.play-btn:hover{transform:translateY(-3px) scale(1.035)}
+.random-card .game-thumb{display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--theme-accent) 24%,var(--theme-surface-2)),var(--theme-input) 65%)}
+.random-card .game-thumb-img{width:86px;height:86px;object-fit:contain;filter:drop-shadow(0 12px 22px color-mix(in srgb,var(--theme-accent) 25%,transparent));transform:perspective(800px) rotateY(var(--tilt-x,0deg)) rotateX(var(--tilt-y,0deg)) scale(1)}
+.random-card:hover .game-thumb-img{transform:perspective(800px) rotateY(var(--tilt-x,0deg)) rotateX(var(--tilt-y,0deg)) scale(1.12);}
+
+/* Player pages now use the same tabbed chrome */
+.game-shell{padding:0 22px 22px;min-height:calc(100vh - 10px)}
+.game-page-title{max-width:1220px;margin:4px auto 12px;padding:0 4px;display:flex;align-items:center;justify-content:space-between;gap:15px}.game-page-title h1{margin:0;font-size:24px;letter-spacing:-.04em}.game-page-chip{font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--theme-accent-soft)}.game-actions{max-width:1220px;margin:0 auto 12px;display:flex;justify-content:flex-end;gap:8px}.game-actions .secondary,.game-actions .primary{padding:9px 13px}
+@media(max-width:760px){.browser-nav{height:60px;border-radius:18px}.browser-window-dots,.browser-pill{display:none}.browser-tabs{gap:3px}.browser-tab{flex:1;justify-content:center;padding:0 8px;font-size:12px}.tab-favicon{display:none}.game-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.game-thumb{height:160px}.game-shell{padding:0 12px 12px}.game-page-title h1{font-size:20px}}
+@media(max-width:500px){.browser-nav-wrap{padding:0 10px}.browser-nav{width:calc(100vw - 20px)}.browser-tab{font-size:11px}.game-grid{grid-template-columns:1fr}.game-thumb{height:200px}}
+@media(prefers-reduced-motion:reduce){.browser-nav::before,.game-card,.game-thumb-img,.tab-transition img,.falling-ball{animation:none!important;transition:none!important}.tab-transition{transition:none!important}}
