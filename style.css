@@ -8,3 +8,97 @@
 @media(max-width:560px){.doodle-vertical .game-stage{width:min(56.25vh,100%);height:min(calc(100vh - 62px),177.7778vw);}}
 
 .settings-actions .primary,.settings-actions .secondary{padding:8px 12px;border-radius:10px;font-size:13px}.settings-card input[type=text],.settings-card input[type=file]{padding:10px;border-radius:10px}.settings-card label{margin-top:16px}
+
+
+/* ---------- Color themes + falling pink balls ---------- */
+:root{
+  --theme-bg:#070609;
+  --theme-surface:#101014;
+  --theme-surface-2:#17151b;
+  --theme-surface-3:#1d1a21;
+  --theme-input:#0c0b0e;
+  --theme-text:#ffffff;
+  --theme-muted:#a9a1ad;
+  --theme-dim:#77717d;
+  --theme-border:rgba(255,255,255,.10);
+  --theme-border-strong:rgba(255,255,255,.16);
+  --theme-accent:#ff3d9f;
+  --theme-accent-soft:#ff76bd;
+  --theme-accent-2:#8c2dff;
+  --theme-glow-a:#ff2f9d;
+  --theme-glow-b:#7d2cff;
+  --theme-header-rgb:7,6,9;
+}
+html[data-theme="purple"]{
+  --theme-bg:#090711;--theme-surface:#13101b;--theme-surface-2:#1b1625;--theme-surface-3:#241d31;--theme-input:#0e0b15;
+  --theme-muted:#b2a7c0;--theme-dim:#7e728c;--theme-border:rgba(220,192,255,.12);--theme-border-strong:rgba(220,192,255,.20);
+  --theme-accent:#a86bff;--theme-accent-soft:#c394ff;--theme-accent-2:#6231ff;--theme-glow-a:#9a48ff;--theme-glow-b:#4322ff;--theme-header-rgb:9,7,17;
+}
+html[data-theme="blue"]{
+  --theme-bg:#061018;--theme-surface:#0d1721;--theme-surface-2:#12202c;--theme-surface-3:#192936;--theme-input:#08121a;
+  --theme-muted:#a4b8c8;--theme-dim:#718695;--theme-border:rgba(174,222,255,.12);--theme-border-strong:rgba(174,222,255,.20);
+  --theme-accent:#39a8ff;--theme-accent-soft:#73c2ff;--theme-accent-2:#4169ff;--theme-glow-a:#259dff;--theme-glow-b:#304dff;--theme-header-rgb:6,16,24;
+}
+html[data-theme="green"]{
+  --theme-bg:#06110b;--theme-surface:#0d1711;--theme-surface-2:#122019;--theme-surface-3:#1a2a20;--theme-input:#08120c;
+  --theme-muted:#a8c4af;--theme-dim:#718b78;--theme-border:rgba(176,255,198,.12);--theme-border-strong:rgba(176,255,198,.20);
+  --theme-accent:#36d48b;--theme-accent-soft:#72efb0;--theme-accent-2:#20a86a;--theme-glow-a:#24d584;--theme-glow-b:#1e8f67;--theme-header-rgb:6,17,11;
+}
+html[data-theme="orange"]{
+  --theme-bg:#120a05;--theme-surface:#1a100a;--theme-surface-2:#24160d;--theme-surface-3:#302017;--theme-input:#0e0906;
+  --theme-muted:#cfb3a2;--theme-dim:#8d7263;--theme-border:rgba(255,215,191,.12);--theme-border-strong:rgba(255,215,191,.20);
+  --theme-accent:#ff8a2a;--theme-accent-soft:#ffb269;--theme-accent-2:#f0522b;--theme-glow-a:#ff7a2e;--theme-glow-b:#db3f2c;--theme-header-rgb:18,10,5;
+}
+html[data-theme="mono"]{
+  --theme-bg:#0a0a0a;--theme-surface:#151515;--theme-surface-2:#1d1d1d;--theme-surface-3:#262626;--theme-input:#101010;
+  --theme-muted:#b9b9b9;--theme-dim:#777;--theme-border:rgba(255,255,255,.10);--theme-border-strong:rgba(255,255,255,.18);
+  --theme-accent:#e7e7e7;--theme-accent-soft:#ffffff;--theme-accent-2:#a7a7a7;--theme-glow-a:#bdbdbd;--theme-glow-b:#626262;--theme-header-rgb:10,10,10;
+}
+html,body{background:var(--theme-bg)!important;color:var(--theme-text)!important}
+body{transition:background-color .35s ease,color .35s ease}
+.header{background:rgba(var(--theme-header-rgb),.84)!important;border-bottom-color:var(--theme-border)!important}
+.brand-dot{box-shadow:0 0 24px color-mix(in srgb,var(--theme-accent) 40%,transparent)!important}
+.header-right{color:var(--theme-muted)!important}.header-right a:hover,.active-link{color:var(--theme-text)!important}
+.ai-link{color:var(--theme-accent-soft)!important}
+.bg-glow{opacity:.28}.glow-a{background:var(--theme-glow-a)!important}.glow-b{background:var(--theme-glow-b)!important}
+.hero-wordmark{background:linear-gradient(110deg,#fff 5%,var(--theme-accent-soft) 38%,var(--theme-accent) 58%,var(--theme-accent-2) 90%);-webkit-background-clip:text;background-clip:text}
+.home-sub,.page-note,.settings-note{color:var(--theme-muted)!important}
+.home-links,.home-links a{color:var(--theme-muted)}.home-links a:hover{color:var(--theme-accent-soft)!important}
+.hero-orbit{border-color:color-mix(in srgb,var(--theme-accent-soft) 24%,transparent)!important}.orbit-two{border-color:color-mix(in srgb,var(--theme-accent-2) 28%,transparent)!important}
+.search{border-color:var(--theme-border-strong)!important;background:color-mix(in srgb,var(--theme-surface) 78%,transparent)!important}.search:focus-within{border-color:var(--theme-accent)!important;box-shadow:0 0 0 4px color-mix(in srgb,var(--theme-accent) 12%,transparent),0 18px 60px rgba(0,0,0,.35)!important}
+.search input,.settings-card input[type=text],.settings-card input[type=password],.settings-card input[type=file],.chat-form input{color:var(--theme-text)!important}.search input::placeholder{color:var(--theme-dim)!important}
+.quick-results{background:var(--theme-surface)!important;border-color:var(--theme-border)!important}.quick-result{border-bottom-color:var(--theme-border)!important}.quick-result small{color:var(--theme-dim)!important}
+.eyebrow{color:var(--theme-accent-soft)!important}.game-card{background:var(--theme-surface)!important;border-color:var(--theme-border)!important}.game-card:hover{border-color:color-mix(in srgb,var(--theme-accent) 68%,transparent)!important;box-shadow:0 20px 50px rgba(0,0,0,.38),0 0 28px color-mix(in srgb,var(--theme-accent) 14%,transparent)!important}.game-thumb{background-color:var(--theme-surface-2)!important}
+.thumb-initials{background:radial-gradient(circle at 40% 20%,color-mix(in srgb,var(--theme-accent-2) 26%,var(--theme-surface-2)),var(--theme-input) 62%)!important;color:color-mix(in srgb,var(--theme-accent-soft) 90%,#fff)!important}.play-btn,.primary{background:var(--theme-accent)!important;color:#fff!important}.play-btn:hover,.primary:hover{filter:brightness(1.08)}
+.secondary{background:var(--theme-surface-3)!important;color:var(--theme-text)!important;border-color:var(--theme-border)!important}
+.settings-card,.ai-card{background:color-mix(in srgb,var(--theme-surface) 92%,transparent)!important;border-color:var(--theme-border)!important}.settings-card input[type=text],.settings-card input[type=password],.settings-card input[type=file]{background:var(--theme-input)!important;border-color:var(--theme-border-strong)!important}.label-note,.settings-help,.ai-status{color:var(--theme-dim)!important}
+.icon-preset{background:var(--theme-input)!important;border-color:var(--theme-border)!important;color:var(--theme-text)!important}.icon-preset:hover{border-color:color-mix(in srgb,var(--theme-accent) 55%,transparent)!important;background:var(--theme-surface-2)!important}.icon-preset.selected{border-color:var(--theme-accent)!important;box-shadow:0 0 0 2px color-mix(in srgb,var(--theme-accent) 16%,transparent) inset,0 0 18px color-mix(in srgb,var(--theme-accent) 15%,transparent)!important;background:var(--theme-surface-2)!important}
+.settings-actions .primary{background:var(--theme-accent)!important}.status{color:var(--theme-accent-soft)!important}
+.chat-log{background:var(--theme-input)!important;border-color:var(--theme-border)!important}.msg.user{background:var(--theme-accent)!important}.msg.bot{background:var(--theme-surface-2)!important}
+.ad-box{background:var(--theme-input)!important;border-color:var(--theme-border-strong)!important}.ad-box span,.ad-box small{color:var(--theme-dim)!important}
+.game-shell{background:transparent!important}.game-stage{border-color:var(--theme-accent)!important;background:linear-gradient(135deg,var(--theme-accent),var(--theme-accent-soft),var(--theme-accent-2),var(--theme-accent))!important;box-shadow:0 0 45px color-mix(in srgb,var(--theme-accent) 25%,transparent)!important}
+.cursor-dot{box-shadow:0 0 14px var(--theme-accent)!important}.cursor-ring{border-color:var(--theme-accent-soft)!important}
+
+/* YouTube's logo is a wide mark, so don't force it into a square box. */
+.icon-preset[data-tab-name="YouTube"] img{width:48px;height:30px;object-fit:contain;background:transparent;border-radius:0;padding:0}
+
+/* Theme controls */
+.theme-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:8px}
+.theme-preset{position:relative;display:flex;align-items:center;gap:10px;min-height:58px;padding:9px 11px;border:1px solid var(--theme-border);border-radius:13px;background:var(--theme-input);color:var(--theme-text);cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s,background .16s;text-align:left}
+.theme-preset:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--theme-accent) 55%,transparent);background:var(--theme-surface-2)}
+.theme-preset.selected{border-color:var(--theme-accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--theme-accent) 15%,transparent) inset,0 0 18px color-mix(in srgb,var(--theme-accent) 10%,transparent);}
+.theme-swatch{width:32px;height:32px;border-radius:10px;flex:0 0 32px;border:1px solid rgba(255,255,255,.15);box-shadow:inset 0 0 0 3px rgba(255,255,255,.08)}
+.theme-preset[data-theme-choice="pink"] .theme-swatch{background:linear-gradient(135deg,#ff3d9f,#8c2dff)}
+.theme-preset[data-theme-choice="purple"] .theme-swatch{background:linear-gradient(135deg,#a86bff,#6231ff)}
+.theme-preset[data-theme-choice="blue"] .theme-swatch{background:linear-gradient(135deg,#39a8ff,#4169ff)}
+.theme-preset[data-theme-choice="green"] .theme-swatch{background:linear-gradient(135deg,#36d48b,#20a86a)}
+.theme-preset[data-theme-choice="orange"] .theme-swatch{background:linear-gradient(135deg,#ff8a2a,#f0522b)}
+.theme-preset[data-theme-choice="mono"] .theme-swatch{background:linear-gradient(135deg,#ececec,#666)}
+.theme-preset span{font-size:12px;font-weight:800;letter-spacing:.01em}
+
+/* Falling pink balls */
+.falling-balls{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.falling-ball{position:absolute;top:-60px;left:calc(var(--x) * 1%);width:calc(var(--size) * 1px);height:calc(var(--size) * 1px);border-radius:50%;opacity:var(--opacity);filter:blur(calc(var(--blur) * 1px));background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.96) 0 9%,#ffb2da 18%,#ff58ae 52%,#d51e7d 100%);box-shadow:0 0 18px rgba(255,66,166,.42);animation:ballFall var(--duration) linear var(--delay) infinite}
+.header,.home-main,.page-main,.settings-main,.game-shell{position:relative;z-index:1}
+@keyframes ballFall{0%{transform:translate3d(0,-70px,0) rotate(0deg)}22%{transform:translate3d(var(--drift-a),24vh,0) rotate(80deg)}52%{transform:translate3d(var(--drift-b),58vh,0) rotate(190deg)}78%{transform:translate3d(var(--drift-c),88vh,0) rotate(275deg)}100%{transform:translate3d(var(--drift-d),116vh,0) rotate(360deg)}}
+@media (max-width:760px){.theme-presets{grid-template-columns:repeat(2,minmax(0,1fr))}.falling-ball:nth-child(n+18){display:none}}

@@ -32,6 +32,45 @@ const games=[
  {name:'Ultimate Custom Night',file:'ultimate-custom-night.html',img:'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/871720/header.jpg?t=1568143255'}
 ];
 window.BW_GAMES=games;
+
+const THEMES=['pink','purple','blue','green','orange','mono'];
+function applyTheme(theme){
+  const selected=THEMES.includes(theme)?theme:'pink';
+  document.documentElement.dataset.theme=selected;
+  localStorage.setItem('bw_theme',selected);
+  document.querySelectorAll('[data-theme-choice]').forEach(btn=>btn.classList.toggle('selected',btn.dataset.themeChoice===selected));
+}
+function setupThemes(){
+  const saved=localStorage.getItem('bw_theme')||'pink';
+  applyTheme(saved);
+  document.querySelectorAll('[data-theme-choice]').forEach(btn=>{
+    btn.addEventListener('click',()=>applyTheme(btn.dataset.themeChoice));
+  });
+}
+function fallingBalls(){
+  if(document.querySelector('.falling-balls')) return;
+  const layer=document.createElement('div');
+  layer.className='falling-balls';
+  layer.setAttribute('aria-hidden','true');
+  const count=window.innerWidth<760?17:28;
+  for(let i=0;i<count;i++){
+    const ball=document.createElement('span');
+    ball.className='falling-ball';
+    const size=7+Math.random()*22;
+    const x=Math.random()*100;
+    const duration=12+Math.random()*13;
+    const delay=-(Math.random()*duration);
+    const opacity=.18+Math.random()*.45;
+    const blur=Math.random()<.3?1.2:0;
+    const driftA=(Math.random()*90-45).toFixed(1)+'px';
+    const driftB=(Math.random()*120-60).toFixed(1)+'px';
+    const driftC=(Math.random()*90-45).toFixed(1)+'px';
+    const driftD=(Math.random()*140-70).toFixed(1)+'px';
+    ball.style.cssText=`--size:${size.toFixed(1)};--x:${x.toFixed(2)};--duration:${duration.toFixed(2)}s;--delay:${delay.toFixed(2)}s;--opacity:${opacity.toFixed(2)};--blur:${blur};--drift-a:${driftA};--drift-b:${driftB};--drift-c:${driftC};--drift-d:${driftD};`;
+    layer.appendChild(ball);
+  }
+  document.body.prepend(layer);
+}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function gameUrl(file){return 'play/'+file.replace(/\.html?$/,'')+'.html'}
 function renderGames(list,target){if(!target)return;target.innerHTML=list.map((g,i)=>{const initials=g.name.split(/\s+/).map(x=>x[0]).join('').slice(0,3).toUpperCase();return `<article class="game-card" style="animation-delay:${i*35}ms"><a href="${gameUrl(g.file)}" class="game-thumb-link" aria-label="Play ${esc(g.name)}"><div class="game-thumb" ${g.img?`style="background-image:url('${g.img}')"`:''}>${g.img?'':`<div class="thumb-initials">${esc(initials)}</div>`}</div></a><div class="game-body"><div class="game-name">${esc(g.name)}</div><a class="play-btn" href="${gameUrl(g.file)}">Play</a></div></article>`}).join('')}
@@ -93,5 +132,5 @@ function setupSettings(){
   });
 }
 function cursor(){if(matchMedia('(pointer:fine)').matches){document.body.classList.add('no-cursor');const dot=document.createElement('div'),ring=document.createElement('div');dot.className='cursor-dot';ring.className='cursor-ring';document.body.append(dot,ring);let x=-100,y=-100,rx=-100,ry=-100;addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;dot.style.left=x+'px';dot.style.top=y+'px'});function loop(){rx+=(x-rx)*.18;ry+=(y-ry)*.18;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)}loop();addEventListener('mousedown',()=>{ring.classList.remove('click');void ring.offsetWidth;ring.classList.add('click')})}}
-applySettings();setupGames();setupHome();setupSettings();cursor();
+applyTheme(localStorage.getItem('bw_theme')||'pink');applySettings();fallingBalls();setupThemes();setupGames();setupHome();setupSettings();cursor();
 })();
